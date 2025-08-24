@@ -3,5 +3,3 @@ for _, mod in script.Parent:GetChildren() do
 		require(mod)
 	end
 end
-
-print('client modules init => good')

@@ -11,6 +11,4 @@ for _, item in workspace:GetDescendants() do
 	end
 end
 
-print('server object init => good')
-
 script:Destroy()

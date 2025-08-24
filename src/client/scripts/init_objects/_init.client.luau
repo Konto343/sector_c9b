@@ -12,6 +12,4 @@ for _, item in workspace:GetDescendants() do
 	end
 end
 
-print('client object init => good')
-
 script:Destroy()
