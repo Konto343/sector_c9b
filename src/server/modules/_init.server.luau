@@ -5,4 +5,4 @@ for _, obj in script.Parent:GetDescendants() do
 end
 
 script:Destroy()
-print('client init')
+print('server init')

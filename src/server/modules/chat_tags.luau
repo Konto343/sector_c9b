@@ -1,3 +1,5 @@
+--!strict
+
 local module = {}
 
 local players = game:GetService('Players')
@@ -5,7 +7,7 @@ local players = game:GetService('Players')
 type tag_data = {
 	user : number,
 	tags : {
-		[string] : {
+		{
 			name : string,
 			color : Color3
 		}
@@ -14,7 +16,7 @@ type tag_data = {
 
 module.config = {} :: {tag_data}
 
-module.get_tagdata = function(user_id : number)
+module.get_tagdata = function(user_id : number) : tag_data | nil
 	for _, obj in module.config do
 		if obj.user == user_id then
 			return obj
