@@ -2,7 +2,7 @@
 
 local module = {}
 
--- this module handle ALL logics for ALL systems in the game.
+-- this module handle ALL logics for ALL systems (for the core) in the game.
 
 local observer = require(script.Parent.observer)
 
@@ -14,7 +14,8 @@ if not core then
 end
 
 module.loop = nil :: thread | nil
-module.loop_speed_seconds = 1
+module.loop_speed_seconds = .1
+module.core_base = 3 --exponet
 
 -- events
 module.events = {
@@ -41,6 +42,8 @@ module.core = {
 
 -- for mirror array
 module.mirror_array = {
+    _coolant_max = 1000,
+    _coolant = 0,
     coolant_intake = false,
     coolant_out = false,
     focus_length = 0 --how much power to absorb
@@ -102,9 +105,43 @@ function module.set_core_stage(stage_number : number)
     end
 end
 
+--runs only while core is active
 function module._loop()
     while task.wait(module.loop_speed_seconds) do
+        if not module.core.status then
+            continue
+        end
+
+        local ring_factor = (
+            (module.rings.ring1_state and 1 or -.1) * module.rings.rings_speed +
+             (module.rings.ring2_state and 1 or -.1) * module.rings.rings_speed +
+              (module.rings.ring3_state and 1 or -.1) * module.rings.rings_speed +
+               (module.rings.ring4_state and 1 or -.1) * module.rings.rings_speed
+        ) 
+        -- ring_factor - 4 <= x >= -.4
+        -- rings_speed - 0 <= 10 >= 100
         
+        local coolant_factor = math.clamp(
+            module.mirror_array._coolant, 
+            0,
+            module.mirror_array._coolant_max
+        )
+        
+        if module.mirror_array.coolant_intake then
+            module.mirror_array._coolant += 1
+        end
+
+        if module.mirror_array.coolant_out then
+            module.mirror_array._coolant -= 1
+        end
+
+        local temp = (
+            (ring_factor / module.mirror_array.focus_length) ^ module.core_base
+        )
+
+        local power_out = (
+            (temp * module.mirror_array.focus_length) / coolant_factor
+        )
     end
 end
 
