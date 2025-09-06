@@ -71,7 +71,6 @@ function module.header(parent : BasePlayerGui, text : string, height : number | 
 end
 
 function module.item(className : string, parent : BasePlayerGui, height : number | nil)
-
 	local item = Instance.new(className)
 	item.Size = UDim2.new(1, 0, 0, height or 20)
 	
@@ -90,6 +89,8 @@ function module.item(className : string, parent : BasePlayerGui, height : number
 	return self
 end
 
+--------------- methods
+
 function module:pad(pad_amount : number)
 	local pad = Instance.new('UIPadding')
 	pad.PaddingTop = UDim.new(0, pad_amount)
@@ -97,7 +98,7 @@ function module:pad(pad_amount : number)
 	pad.PaddingRight = UDim.new(0, pad_amount)
 	pad.PaddingBottom = UDim.new(0, pad_amount)
 	pad.Parent = self.item
-	return pad
+	return self, pad
 end
 
 function module:pad_horz(pad_amount : number)
@@ -105,18 +106,20 @@ function module:pad_horz(pad_amount : number)
 	pad.PaddingLeft = UDim.new(0, pad_amount)
 	pad.PaddingRight = UDim.new(0, pad_amount)
 	pad.Parent = self.item
-	return pad
+	return self, pad
 end
 
 function module:pad_fix(pad_amount : number)
 	local x = self.item.Size.X
 	local y = self.item.Size.Y
 	self.item.Size = UDim2.new(x.Scale, x.Offset, y.Scale, y.Offset - pad_amount)
+	return self
 end
 
 function module:anchor(direction : Vector2)
 	self.item.Position = UDim2.fromScale(direction.X, direction.Y)
 	self.item.AnchorPoint = direction
+	return self
 end
 
 function module:containerize(pad_amount : number | nil)
@@ -132,6 +135,7 @@ function module:containerize(pad_amount : number | nil)
 	
 	self.item.Size = UDim2.fromScale(1, 1) --fill old space + padding
 	self.item.Parent = container
+	return self, container
 end
 
 function module:bind(key : Enum.KeyCode, run : () -> ())
@@ -140,6 +144,7 @@ function module:bind(key : Enum.KeyCode, run : () -> ())
 			run()
 		end
 	end)
+	return self
 end
 
 function module:draggable()
@@ -189,6 +194,8 @@ function module:draggable()
 			update_drag(Input)
 		end
 	end)
+
+	return self
 end
 
 function module:list_layout(amount : number | nil)
@@ -196,18 +203,19 @@ function module:list_layout(amount : number | nil)
 	list.Padding = UDim.new(0, amount or 10)
 	list.SortOrder = Enum.SortOrder.LayoutOrder
 	list.Parent = self.item
-	return list
+	return self, list
 end
 
 function module:corner(amount : number | nil)
 	local corner = Instance.new('UICorner')
 	corner.CornerRadius = UDim.new(0, amount or 10)
 	corner.Parent = self.item
-	return corner
+	return self, corner
 end
 
 function module:fill()
 	self.item.Size = UDim2.fromScale(1,1)
+	return self
 end
 
 function module:canvas_adapt()
@@ -219,6 +227,7 @@ function module:canvas_adapt()
 			layout.AbsoluteContentSize.X, layout.AbsoluteContentSize.Y + 20
 		)
 	end)
+	return self
 end
 
 return module

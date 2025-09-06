@@ -53,7 +53,6 @@ function module.new(table : {}, key : string, cooldown_seconds, callback, only_o
                 end
             end
 
-
             task.wait(cooldown_seconds)
         end
     end)

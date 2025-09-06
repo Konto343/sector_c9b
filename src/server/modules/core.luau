@@ -7,15 +7,15 @@ local module = {}
 local observer = require(script.Parent.observer)
 
 --change name to ted or something, something unique
+--also if this fails to be found, the universe collaspes
 local core = workspace:FindFirstChild('core', true)
-
-if not core then
-    return
-end
+assert(core, 'Core is MISSING!??!?!?')
 
 module.loop = nil :: thread | nil
 module.loop_speed_seconds = .1
-module.core_base = 3 --exponet
+
+module.core_expo = 3 --exponet
+module.power_out = 0
 
 -- events
 module.events = {
@@ -135,14 +135,19 @@ function module._loop()
             module.mirror_array._coolant -= 1
         end
 
-        local temp = (
-            (ring_factor / module.mirror_array.focus_length) ^ module.core_base
-        )
+        module.core.temperature = (
+            (ring_factor / module.mirror_array.focus_length) ^ module.core_expo
+        ) + (module.core.radiation / module.core_expo)
 
-        local power_out = (
-            (temp * module.mirror_array.focus_length) / coolant_factor
+        module.power_out = (
+            (module.core.temperature * module.mirror_array.focus_length) / coolant_factor
         )
     end
+end
+
+function module.reset()
+    --whatever
+    return 'apple'
 end
 
 function module.init()

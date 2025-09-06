@@ -1,7 +1,14 @@
 * = DONE
 
+general:
+    add zones inside the cave to control the ambient darkness from the outside
+    add materials to world layout (per model)
+        (look to collected reference pictures already)
+    * outline the core's rings system, but don't overmodel
+    add the weird dome room on the leftest side of the cave. ("astro-lab")
+
 lore:
-    LOOK IN GOOGLE DOC, DUMMY
+    LOOK IN DOCUMENT :3, DUMMY
 
 scripts:
     movable objects (with hand, aka the force)
@@ -14,7 +21,7 @@ scripts:
     ? rework state objects with master class object system
 
 models:
-    * K-Corp logo
+    * C9B logo
     * water tanks
     * solar panels
     hanging Lights (better)
@@ -47,7 +54,7 @@ models:
     * wooden table (normal, and nana's)
     red lights (warning)
     wire spoils
-    garage doors
+    * garage doors
     power box (big)
     cargo carts
     * card readers
@@ -58,7 +65,7 @@ models:
     spot lights
     cargo elevators (large)
     board room boards
-    satilite dishes
+    * satilite dishes
     air conditioners
     trash cans (tall ones)
     outdoor garage lights
