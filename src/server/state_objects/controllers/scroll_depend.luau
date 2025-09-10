@@ -1,56 +1,40 @@
-local module = {}
+--!strict
 
 local utils = require(game.ReplicatedStorage.shared.utils)
+local types = require(script.Parent.Parent.state_controller)
 local ts = game:GetService('TweenService')
 
-local button = script.Parent.button
+local module = {} :: types.self
+
+local button = script.Parent:FindFirstChild('button') :: BasePart
 local button_og = button.CFrame
 
-local click : ClickDetector = button.ClickDetector
+local click = button:FindFirstChildWhichIsA('ClickDetector', true)
 local screen = script.Parent.screen
 
 local target = script.Parent.Parent:FindFirstChild('_target', true)
 
-local is_locked = false
+assert(click)
 
-module.lock = function(value : boolean)
-	is_locked = value
+module.at_lock = function(value : boolean)
 	click.MaxActivationDistance = if value then 0 else 10
-
 	screen.SurfaceGui.TextLabel.TextColor3 = if value then Color3.fromRGB(255, 255, 0) else Color3.fromRGB(255, 255, 255)
-
-	if not value then
-		module.init() --effectively a "reset"
-	end
 end
 
-module.state = function(value, initial: boolean | nil)
-	if is_locked then
-		return
-	end
-	
-	if type(value) == 'boolean' then
-		return
-	end
-	
+module.at_set = function(value)	
 	screen.SurfaceGui.TextLabel.Text = value
 	ts:Create(button, TweenInfo.new(.5), {
 		['CFrame'] = button_og * CFrame.Angles(math.rad(10*value), 0, 0)
 	}):Play()
-
-	if initial then
-		return
-	end
 	
 	utils.sound(button, 9083627113):Play()
-	target:SetAttribute('value', value)
 end
 
 module.init = function()
 	local value = target:GetAttribute('value')
 	local lock_state = script.Parent:GetAttribute('locked')
 	
-	module.state(value, true)
+	module.set(value, true)
 	
 	if lock_state then
 		module.lock(lock_state)
@@ -61,7 +45,7 @@ module.events = {
 	target.AttributeChanged:Connect(function(attribute: string)
 		if attribute == 'value' then
 			local state = target:GetAttribute('value')
-			module.state(state)
+			module.set(state)
 		end
 	end),
 	
@@ -82,7 +66,5 @@ module.events = {
 		target:SetAttribute('value', value - 1)
 	end)
 }
-
-module.init()
 
 return module

@@ -1,7 +1,10 @@
-local module = {}
+--!strict
 
 local utils = require(game.ReplicatedStorage.shared.utils)
+local types = require(script.Parent.Parent.state_controller)
 local ts = game:GetService('TweenService')
+
+local module = {} :: types.self
 
 local primary = script.Parent.model:FindFirstChild('root', true)
 local body = script.Parent.model.body
@@ -9,15 +12,15 @@ local door_og = primary.CFrame
 
 local auto_close_seconds = 60
 
-module.state = function(value: boolean)
+module.at_set = function(value)
 	if value then
-		utils.sound(body, 3611209852):Play()
-		ts:Create(primary, TweenInfo.new(11, Enum.EasingStyle.Exponential, Enum.EasingDirection.InOut), {
-			['CFrame'] = primary.CFrame * CFrame.new(0,22,0)
+		utils.sound(body, 6724991156):Play()
+		ts:Create(primary, TweenInfo.new(10, Enum.EasingStyle.Quad), {
+			['CFrame'] = primary.CFrame * CFrame.new(0,12,0)
 		}):Play()
 	else
-		utils.sound(body, 3611209852):Play()
-		ts:Create(primary, TweenInfo.new(11, Enum.EasingStyle.Exponential, Enum.EasingDirection.InOut), {
+		utils.sound(body, 6724991156):Play()
+		ts:Create(primary, TweenInfo.new(10, Enum.EasingStyle.Quad), {
 			['CFrame'] = door_og
 		}):Play()
 	end
@@ -36,12 +39,12 @@ module.events = {
 	script.Parent.AttributeChanged:Connect(function(attribute: string) 
 		if attribute == 'state' then
 			local state = script.Parent:GetAttribute('state')
-			module.state(state)
+			module.set(state)
 			
 			if auto_close_seconds ~= 0 then
-				local currnet_state = script.Parent:GetAttribute('state')
+				local current_state = script.Parent:GetAttribute('state')
 				
-				if not currnet_state then --to prevent infinite loopbacks
+				if not current_state then --to prevent infinite loopbacks
 					return
 				end
 				

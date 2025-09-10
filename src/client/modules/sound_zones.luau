@@ -68,7 +68,7 @@ module.events = {
 	end)
 }
 
---module._loop = task.spawn(function()
+module._loop = task.spawn(function()
 	while task.wait(update_speed) do
 		local in_zones = {}
 
@@ -134,6 +134,6 @@ module.events = {
 			}):Play()
 		end
 	end
---end)
+end)
 
 return module

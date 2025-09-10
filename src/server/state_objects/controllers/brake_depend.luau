@@ -1,35 +1,31 @@
-local module = {}
+--!strict
 
 local utils = require(game.ReplicatedStorage.shared.utils)
+local types = require(script.Parent.Parent.state_controller)
 local ts = game:GetService('TweenService')
 
-local rod = script.Parent.handle.root
+local module = {} :: types.self
+module._locked = false
+
+local model = script.Parent
+local target = model.Parent:FindFirstChild('_target', true)
+
+assert(target, 'No target.')
+
+local rod = model.handle.root
 local rod_og = rod.CFrame
-
-local button = script.Parent.handle.button
+local button = model.handle.button
 local click = button.ClickDetector
-local light = script.Parent.light
-local target = script.Parent.Parent:FindFirstChild('_target', true)
+local light = model.light
 
-local is_locked = false
-
-module.lock = function(value : boolean)
-	is_locked = value
+module.at_lock = function(value)
 	click.MaxActivationDistance = if value then 0 else 10
 
 	light.Color = Color3.fromRGB(255, 255, 0) 
 	light.PointLight.Color = Color3.fromRGB(255,255,0)
-
-	if not value then
-		module.init() --effectively a "reset"
-	end
 end
 
-module.state = function(value, initial: boolean | nil)
-	if is_locked then
-		return
-	end
-
+module.at_set = function(value)
 	light.Color = if value then Color3.fromRGB(0,255,0) else Color3.fromRGB(255,0,0)
 	light.PointLight.Color = if value then Color3.fromRGB(0,255,0) else Color3.fromRGB(255,0,0)
 	
@@ -42,47 +38,29 @@ module.state = function(value, initial: boolean | nil)
 			['CFrame'] = rod_og
 		}):Play()
 	end
-
-	if initial then
-		return
-	end
 	
 	utils.sound(button, 9119720940):Play()
-	target:SetAttribute('state', value)
-end
-
-module.init = function()
-	local state = target:GetAttribute('state')
-	local lock_state = script.Parent:GetAttribute('locked')
-	
-	module.state(state, true)
-	
-	if lock_state then
-		module.lock(lock_state)
-	end
 end
 
 module.events = {
 	target.AttributeChanged:Connect(function(attribute: string)
 		if attribute == 'state' then
 			local state = target:GetAttribute('state')
-			module.state(state)
+			module.set(state)
 		end
 	end),
 	
-	script.Parent.AttributeChanged:Connect(function(attribute: string)
+	model.AttributeChanged:Connect(function(attribute: string)
 		if attribute == 'locked' then
-			local state = script.Parent:GetAttribute('locked')
+			local state = model:GetAttribute('locked')
 			module.lock(state)
 		end	
 	end),
 
 	click.MouseClick:Connect(function() 
 		local state = target:GetAttribute('state')
-		module.state(not state)
+		module.set(not state)
 	end)
 }
-
-module.init()
 
 return module

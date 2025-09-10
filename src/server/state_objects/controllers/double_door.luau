@@ -1,6 +1,10 @@
-local module = {}
+--!strict
 
 local utils = require(game.ReplicatedStorage.shared.utils)
+local types = require(script.Parent.Parent.state_controller)
+
+local module = {} :: types.self
+
 local ts = game:GetService('TweenService')
 
 local left_door = script.Parent.left_door
@@ -15,7 +19,7 @@ local right_og = right_primary.CFrame
 
 local auto_close_seconds = 30
 
-module.state = function(value : boolean)
+module.at_set = function(value)
 	if value then
 		utils.sound(left_body, 103840462424166):Play()
 		utils.sound(right_body, 103840462424166):Play()
@@ -59,12 +63,12 @@ module.events = {
 	script.Parent.AttributeChanged:Connect(function(attribute: string) 
 		if attribute == 'state' then
 			local state = script.Parent:GetAttribute('state')
-			module.state(state)
+			module.set(state)
 			
 			if auto_close_seconds ~= 0 then
-				local currnet_state = script.Parent:GetAttribute('state')
+				local current_state = script.Parent:GetAttribute('state')
 
-				if not currnet_state then --to prevent infinite loopbacks
+				if not current_state then --to prevent infinite loopbacks
 					return
 				end
 

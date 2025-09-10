@@ -94,7 +94,7 @@ module.core_stages = {
 }
 
 observer.new(module.events, 'emergency_fold', 1, function()
-    print('core has folded like a chair.')
+    --nothing
 end, true)
 
 function module.set_core_stage(stage_number : number)

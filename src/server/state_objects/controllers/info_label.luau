@@ -1,8 +1,11 @@
-local module = {}
+--!strict
 
 local utils = require(game.ReplicatedStorage.shared.utils)
-local text = script.Parent.Part.SurfaceGui.Frame.value
+local types = require(script.Parent.Parent.state_controller)
 
+local module = {} :: types.self
+
+local text = script.Parent.Part.SurfaceGui.Frame.value
 local last_value = script.Parent:GetAttribute('value')
 
 function lerp_number(value, goal, step)
@@ -13,7 +16,7 @@ function round(value)
 	return math.floor(value * 100) / 100
 end
 
-module.state = function(value)
+module.at_set = function(value)
 	for i=1,5 do
 		local lerped_number = lerp_number(last_value, value, 0.20*i)
 		text.Text = ('%s'):format(round(lerped_number))
@@ -35,7 +38,7 @@ module.events = {
 	script.Parent.AttributeChanged:Connect(function(attribute: string)
 		if attribute == 'value' then
 			local value = script.Parent:GetAttribute('value')
-			module.state(value)
+			module.set(value)
 		end
 	end)
 }

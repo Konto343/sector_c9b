@@ -1,10 +1,14 @@
-local module = {}
+--!strict
 
+local types = require(script.Parent.Parent.state_controller)
 local ts = game:GetService('TweenService')
+
+local module = {} :: types.self
+
 local frame = script.Parent.Part.SurfaceGui.Frame
 local bar = frame.bar
 
-module.state = function(value)
+module.at_set = function(value)
 	local max = script.Parent:GetAttribute('max')
 	local percentage = value/max
 
@@ -22,7 +26,7 @@ module.events = {
 	script.Parent.AttributeChanged:Connect(function(attribute: string)
 	if attribute == 'value' or attribute == 'max' then
 			local value = script.Parent:GetAttribute('value')
-			module.state(value)
+			module.set(value)
 		end
 	end)
 }

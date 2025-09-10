@@ -1,17 +1,20 @@
-local module = {}
+--!strict
 
 local utils = require(game.ReplicatedStorage.shared.utils)
+local types = require(script.Parent.Parent.state_controller)
 local ts = game:GetService('TweenService')
 
-local left_primary = script.Parent.left:FindFirstChild('root', true)
-local right_primary = script.Parent.right:FindFirstChild('root', true)
+local module = {} :: types.self
 
+local model = script.Parent
+local left_primary = model.left:FindFirstChild('root', true)
+local right_primary = model.right:FindFirstChild('root', true)
 local left_og = left_primary.CFrame
 local right_og = right_primary.CFrame
 
 local auto_close_seconds = 60
 
-module.state = function(value: boolean)
+module.at_set = function(value: boolean)
 	local tween_info = TweenInfo.new(15, Enum.EasingStyle.Exponential, Enum.EasingDirection.InOut)
 
 	if value then
@@ -61,16 +64,20 @@ module.state = function(value: boolean)
 	end
 end
 
+module.attributes = {
+	state = false
+}
+
 module.events = {
 	script.Parent.AttributeChanged:Connect(function(attribute: string) 
 		if attribute == 'state' then
 			local state = script.Parent:GetAttribute('state')
-			module.state(state)
+			module.set(state)
 			
 			if auto_close_seconds ~= 0 then
-				local currnet_state = script.Parent:GetAttribute('state')
+				local current_state = script.Parent:GetAttribute('state')
 				
-				if not currnet_state then --to prevent infinite loopbacks
+				if not current_state then --to prevent infinite loopbacks
 					return
 				end
 				

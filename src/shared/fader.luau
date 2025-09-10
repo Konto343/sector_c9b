@@ -1,7 +1,6 @@
 --!strict
 
 local module = {}
-module.__index = module
 
 local ts = game:GetService('TweenService')
 local players = game:GetService('Players')
@@ -11,7 +10,6 @@ local local_player = players.LocalPlayer
 type self = {
     _frame : Frame
 }
-export type class = typeof(setmetatable({} :: self, module))
 
 function create_fade()
     local ui = Instance.new('ScreenGui')
@@ -26,7 +24,7 @@ function create_fade()
     return fade
 end
 
-function module.new() : class
+function module.new()
     local self = setmetatable({} :: self, module)
     self._frame = create_fade()
 

@@ -1,7 +1,10 @@
-local module = {}
+--!strict
 
 local utils = require(game.ReplicatedStorage.shared.utils)
-local ts = game:GetService("TweenService")
+local types = require(script.Parent.Parent.state_controller)
+local ts = game:GetService('TweenService')
+
+local module = {} :: types.self
 
 local core = script.Parent
 
@@ -18,7 +21,7 @@ local dish_motor = nil :: Motor6D | nil
 
 local locked = false
 
-function weld_model(model : Model, filter : {BasePart}, unanchor_root : boolean | nil)
+function weld_model(model : Model, filter : {Instance}, unanchor_root : boolean | nil)
 	local root = model:FindFirstChild('root', true) :: BasePart
 
 	if unanchor_root then
@@ -57,7 +60,7 @@ function weld_motor6d(part0, part1)
 	return weld
 end
 
-module.move = function(x, z)
+module.at_set = function(x, z)
 	if locked then
 		return
 	end
@@ -112,12 +115,8 @@ module.events = {
 				local x = core:GetAttribute('x')
 				local z = core:GetAttribute('z')
 				core:SetAttribute('state', false)
-				module.move(x, z)
+				module.set(x, z)
 			end
-		end	
-		
-		if attribute == 'locked' then
-			locked = core:GetAttribute('locked')
 		end
 	end),
 }
@@ -127,7 +126,5 @@ module.init = function()
 	weld_model(dish, {}, true)
 	dish_motor = weld_motor6d(dish_root, container)
 end
-
-module.init()
 
 return module

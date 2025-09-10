@@ -1,6 +1,9 @@
-local module = {}
+--!strict
 
+local types = require(script.Parent.Parent.state_controller)
 local ts = game:GetService('TweenService')
+
+local module = {} :: types.self
 
 local lift = script.Parent.lift
 local floors = script.Parent.floors
@@ -30,7 +33,7 @@ function weld_motor6d(part0, part1)
 	return weld
 end
 
-function weld_model(model : Model, filter : {BasePart}, unanchor_root : boolean | nil)
+function weld_model(model : Model, filter : {Instance}, unanchor_root : boolean | nil)
 	local root = model:FindFirstChild('root', true) :: BasePart
 
 	if unanchor_root then
@@ -85,8 +88,8 @@ function layer_door(index, state)
 	local left : BasePart = layer.doors.left
 	local right : BasePart = layer.doors.right
 
-	local left_og = left:GetAttribute('og')
-	local right_og = right:GetAttribute('og')
+	local left_og = left:GetAttribute('og') :: CFrame
+	local right_og = right:GetAttribute('og') :: CFrame
 
 	local left_goal = left_og * CFrame.new(-2.5,0,0)
 	local right_goal = right_og * CFrame.new(2.5,0,0)
@@ -168,7 +171,7 @@ function move_to_floor(index : number)
 	is_moving = false
 end
 
-function init()
+module.init = function()
 	weld_model(lift, {right_door, left_door}, true)
 
 	weld_motor6d(left_door, left_door.Parent)
@@ -198,7 +201,7 @@ function init()
 		button_label.Text = floor_name
 
 		click.MouseClick:Connect(function() 
-			move_to_floor(floor_index)
+			move_to_floor(floor_index or 1)
 		end)
 		
 		floor.Touched:Connect(function(otherPart: BasePart)  
@@ -235,10 +238,10 @@ function init()
 			end
 
 			local layer_index = tonumber(layer.Name)
-			move_to_floor(layer_index)
+			move_to_floor(layer_index or 1)
 
 			if current_floor == layer_index then
-				local left_og = left:GetAttribute('og')
+				local left_og = left:GetAttribute('og') :: CFrame
 				local left_goal = left_og * CFrame.new(-2.5,0,0)
 				if left.CFrame == left_goal then
 					return
@@ -254,9 +257,5 @@ function init()
 	force.Position = floors[1].Position
 	rotate_force.CFrame = floors[1].CFrame
 end
-
-task.wait(1)
-
-init()
 
 return module

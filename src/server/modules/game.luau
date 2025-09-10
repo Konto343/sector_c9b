@@ -29,7 +29,7 @@ function module.sort_players()
     
     for _, team in config.teams do
         local group = teams:FindFirstChild(team.name, true)
-        if not group then
+        if not group and team.show then
             local new = Instance.new('Team')
             new.TeamColor = BrickColor.DarkGray()
             new.Parent = teams

@@ -1,13 +1,8 @@
-for _, item in workspace:GetDescendants() do
-	local tags = item:GetTags()
-	
-	for _, tag in tags do
-		local _script : ModuleScript = script.Parent:FindFirstChild(tag)
-		if _script then
-			local clone = _script:Clone()
-			clone.Parent = item
-			require(clone)
-		end
+local state_controller = require(script.Parent.state_controller)
+
+for _, obj in workspace:GetDescendants() do
+	if obj:IsA('Model') then
+		state_controller.setup(obj)
 	end
 end
 

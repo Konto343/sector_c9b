@@ -1,6 +1,10 @@
-local module = {}
+--!strict
 
 local utils = require(game.ReplicatedStorage.shared.utils)
+local types = require(script.Parent.Parent.state_controller)
+
+local module = {} :: types.self
+
 local target = script.Parent.Parent
 
 local card_requirement = target:GetAttribute('card_requirement')
@@ -20,6 +24,10 @@ module.events = {
 		end
 		
 		local tool = otherPart.Parent
+
+		if not tool then
+			return
+		end
 		
 		if not tool:IsA('Tool') then
 			return
@@ -27,8 +35,8 @@ module.events = {
 
 		local card_level = tool:GetAttribute('card_level')
 
-		if not card_level then --erm what the sigma, big no no
-			utils.sound(hit_part, 14428739841):Play()
+		if not card_level then
+			utils.sound(hit_part, 14428739841, .2):Play()
 			light.Color = Color3.new(0.85098, 0, 1)
 		end
 

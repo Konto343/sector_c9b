@@ -10,12 +10,14 @@ return {
         {
             name = 'Director',
             max = 1,
-            min = 1
+            min = 1,
+            show = false
         },
         {
             name = 'Administrator',
             max = -1,
-            min = -1
+            min = -1,
+            show = false
         },
         {
             name = 'Info-Managers',
