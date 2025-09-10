@@ -1,10 +1,9 @@
 --!strict
 
-local types = require(script.Parent.Parent.state_controller)
 local ts = game:GetService('TweenService')
+local controllers = require(game.ReplicatedStorage.shared.controllers.types)
 
-local module = {} :: types.self
-
+local module = {} :: controllers.self
 local lift = script.Parent.lift
 local floors = script.Parent.floors
 local layers = script.Parent.layers

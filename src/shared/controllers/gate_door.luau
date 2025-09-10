@@ -1,16 +1,19 @@
 --!strict
 
 local utils = require(game.ReplicatedStorage.shared.utils)
-local types = require(script.Parent.Parent.state_controller)
 local ts = game:GetService('TweenService')
+local controllers = require(game.ReplicatedStorage.shared.controllers.types)
 
-local module = {} :: types.self
-
+local module = {} :: controllers.self
 local primary = script.Parent.model:FindFirstChild('root', true)
 local body = script.Parent.model.body
 local door_og = primary.CFrame
 
 local auto_close_seconds = 60
+
+module.attributes = {
+	state = false
+}
 
 module.at_set = function(value)
 	if value then

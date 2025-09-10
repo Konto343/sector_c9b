@@ -1,18 +1,21 @@
 --!strict
 
 local utils = require(game.ReplicatedStorage.shared.utils)
-local types = require(script.Parent.Parent.state_controller)
 local ts = game:GetService('TweenService')
+local controllers = require(game.ReplicatedStorage.shared.controllers.types)
 
-local module = {} :: types.self
-
+local module = {} :: controllers.self
 local button = script.Parent.button
 local button_og = button.CFrame
 
 local click : ClickDetector = button.ClickDetector
 local screen = script.Parent.screen
 
-local self = script.Parent
+local model = script.Parent
+
+module.attributes = {
+	value = 0
+}
 
 module.at_lock = function(value)
 	click.MaxActivationDistance = if value then 0 else 10
@@ -37,12 +40,12 @@ module.events = {
 	end),
 	
 	click.MouseClick:Connect(function() 
-		local value = self:GetAttribute('value')
+		local value = model:GetAttribute('value')
 		module.set(value + 2)
 	end),
 	
 	click.RightMouseClick:Connect(function()
-		local value = self:GetAttribute('value')
+		local value = model:GetAttribute('value')
 		module.set(value - 2)
 	end)
 }

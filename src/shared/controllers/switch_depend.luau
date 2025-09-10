@@ -1,14 +1,17 @@
 --!strict
 
 local utils = require(game.ReplicatedStorage.shared.utils)
-local types = require(script.Parent.Parent.state_controller)
+local controllers = require(game.ReplicatedStorage.shared.controllers.types)
 
-local module = {} :: types.self
-
+local module = {} :: controllers.self
 local button = script.Parent.button
 local click = button.ClickDetector
 local light = script.Parent.light
 local target = script.Parent.Parent:FindFirstChild('_target', true)
+
+module.attributes = {
+	state = false
+}
 
 module.at_lock = function(value)
 	click.MaxActivationDistance = value and 0 or 10

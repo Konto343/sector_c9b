@@ -1,11 +1,10 @@
 --!strict
 
 local utils = require(game.ReplicatedStorage.shared.utils)
-local types = require(script.Parent.Parent.state_controller)
 local ts = game:GetService('TweenService')
+local controllers = require(game.ReplicatedStorage.shared.controllers.types)
 
-local module = {} :: types.self
-
+local module = {} :: controllers.self
 local core = script.Parent
 
 local base = core.base
@@ -59,6 +58,12 @@ function weld_motor6d(part0, part1)
 	weld.Parent = part0
 	return weld
 end
+
+module.attributes = {
+	state = false,
+	x = 0,
+	z = 0
+}
 
 module.at_set = function(x, z)
 	if locked then

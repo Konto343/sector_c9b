@@ -1,11 +1,10 @@
 --!strict
 
 local utils = require(game.ReplicatedStorage.shared.utils)
-local types = require(script.Parent.Parent.state_controller)
 local ts = game:GetService('TweenService')
+local controllers = require(game.ReplicatedStorage.shared.controllers.types)
 
-local module = {} :: types.self
-
+local module = {} :: controllers.self
 local model = script.Parent
 local left_primary = model.left:FindFirstChild('root', true)
 local right_primary = model.right:FindFirstChild('root', true)
@@ -13,6 +12,10 @@ local left_og = left_primary.CFrame
 local right_og = right_primary.CFrame
 
 local auto_close_seconds = 60
+
+module.attributes = {
+	state = false
+}
 
 module.at_set = function(value: boolean)
 	local tween_info = TweenInfo.new(15, Enum.EasingStyle.Exponential, Enum.EasingDirection.InOut)
@@ -63,10 +66,6 @@ module.at_set = function(value: boolean)
 		}):Play()
 	end
 end
-
-module.attributes = {
-	state = false
-}
 
 module.events = {
 	script.Parent.AttributeChanged:Connect(function(attribute: string) 

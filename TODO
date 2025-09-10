@@ -1,10 +1,16 @@
 * = DONE
 
 general:
+    orangize music and sounds in sounds folder
+    modify utils to include a sound group param
+    Warehouse enclosure with rectangle windows
+    Game intro
+    Npcs and dialouge?
+
     add zones inside the cave to control the ambient darkness from the outside
-    add materials to world layout (per model)
-        (look to collected reference pictures already)
+        Make Zone Manager in advance (for monarch) to make
     * outline the core's rings system, but don't overmodel
+        Design attacher and releasers to rings and core
     add the weird dome room on the leftest side of the cave. ("astro-lab")
     remove herobrine
 

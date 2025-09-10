@@ -1,20 +1,24 @@
 --!strict
 
 local utils = require(game.ReplicatedStorage.shared.utils)
-local types = require(script.Parent.Parent.state_controller)
+local controllers = require(game.ReplicatedStorage.shared.controllers.types)
 
-local module = {} :: types.self
-
+local module = {} :: controllers.self
 local text = script.Parent.Part.SurfaceGui.Frame.value
-local last_value = script.Parent:GetAttribute('value')
+local last_value = 0
 
 function lerp_number(value, goal, step)
+	print(value, goal, step)
 	return value + (goal-value) * step
 end
 
 function round(value)
 	return math.floor(value * 100) / 100
 end
+
+module.attributes = {
+	value = 10
+}
 
 module.at_set = function(value)
 	for i=1,5 do

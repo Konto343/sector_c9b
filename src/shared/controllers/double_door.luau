@@ -1,11 +1,10 @@
 --!strict
 
 local utils = require(game.ReplicatedStorage.shared.utils)
-local types = require(script.Parent.Parent.state_controller)
-
-local module = {} :: types.self
-
 local ts = game:GetService('TweenService')
+local controllers = require(game.ReplicatedStorage.shared.controllers.types)
+
+local module = {} :: controllers.self
 
 local left_door = script.Parent.left_door
 local right_door = script.Parent.right_door
@@ -18,6 +17,10 @@ local left_og = left_primary.CFrame
 local right_og = right_primary.CFrame
 
 local auto_close_seconds = 30
+
+module.attributes = {
+	state = false
+}
 
 module.at_set = function(value)
 	if value then

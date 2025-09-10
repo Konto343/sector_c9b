@@ -1,55 +1,9 @@
 local module = {}
 
-export type self = {
-    _locked : boolean,
-    state : boolean,
+local controllers = game.ReplicatedStorage.shared.controllers
+local types = require(controllers.types)
 
-    attributes : {
-        [string] : any
-    },
-
-    events : {
-        RBXScriptConnection
-    },
-
-    set : (...any) -> (),
-    set_state : (value : boolean) -> (),
-    lock : (...any) -> (),
-    init : (...any) -> () | nil,
-    at_set : (...any) -> () | nil,
-    at_lock : (value : boolean) -> () | nil,
-}
-
---[[
-    Setup a state controller to a target model. Controllers are only init'd if a matching
-    tag is found to a existing ModuleScript with the same name in the "controllers" folder.
-]]
-function module.setup(model : Model)
-    local controller : ModuleScript | nil
-
-	for _, tag in model:GetTags() do
-        controller = script.Parent:FindFirstChild(tag)
-    end
-
-    if not controller then
-        warn('No controller found!') ; return
-    end
-
-    local module = controller:Clone()
-    module.Parent = model
-    local mod = require(module) :: self
-    for name, value in mod.attributes do
-        if not model:GetAttribute(name) then
-            model:SetAttribute(name, value)
-        end
-    end
-
-    module.imprint(mod)
-    mod.init()
-    mod.set(model:GetAttribute('state'))
-end
-
-function module.imprint(mod : self)
+function module.imprint(mod : types.self)
     mod['set'] = function(...)
         if mod.at_set then
             mod.at_set(...)
@@ -60,6 +14,45 @@ function module.imprint(mod : self)
         if mod.at_lock then
             mod.at_lock(value)
         end
+    end
+end
+
+--[[
+    Setup a state controller to a target model. Controllers are only init'd if a matching
+    tag is found to a existing ModuleScript with the same name in the "controllers" folder.
+]]
+function module.setup(model : Model)
+    local target : ModuleScript | nil
+
+	for _, tag in model:GetTags() do
+        target = controllers:FindFirstChild(tag)
+    end
+
+    if not target then
+        return
+    end
+
+    local controller = target:Clone()
+    controller.Parent = model
+
+    local mod = require(controller) :: types.self
+
+    if mod.attributes then
+        for name, value in mod.attributes do
+            if not model:GetAttribute(name) then
+                model:SetAttribute(name, value)
+            end
+        end
+    end
+
+    module.imprint(mod)
+    if mod.init then
+        mod.init()
+    end
+
+    local state = model:GetAttribute('state')
+    if state then
+        mod.set(state)
     end
 end
 

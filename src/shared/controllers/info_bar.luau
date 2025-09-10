@@ -1,12 +1,16 @@
 --!strict
 
-local types = require(script.Parent.Parent.state_controller)
 local ts = game:GetService('TweenService')
+local controllers = require(game.ReplicatedStorage.shared.controllers.types)
 
-local module = {} :: types.self
-
+local module = {} :: controllers.self
 local frame = script.Parent.Part.SurfaceGui.Frame
 local bar = frame.bar
+
+module.attributes = {
+	value = 10,
+	max = 100
+}
 
 module.at_set = function(value)
 	local max = script.Parent:GetAttribute('max')

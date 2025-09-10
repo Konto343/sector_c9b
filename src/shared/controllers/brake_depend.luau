@@ -1,11 +1,10 @@
 --!strict
 
 local utils = require(game.ReplicatedStorage.shared.utils)
-local types = require(script.Parent.Parent.state_controller)
 local ts = game:GetService('TweenService')
+local controllers = require(game.ReplicatedStorage.shared.controllers.types)
 
-local module = {} :: types.self
-module._locked = false
+local module = {} :: controllers.self
 
 local model = script.Parent
 local target = model.Parent:FindFirstChild('_target', true)
@@ -17,6 +16,10 @@ local rod_og = rod.CFrame
 local button = model.handle.button
 local click = button.ClickDetector
 local light = model.light
+
+module.attributes = {
+	state = false
+}
 
 module.at_lock = function(value)
 	click.MaxActivationDistance = if value then 0 else 10
